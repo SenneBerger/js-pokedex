@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="stylesheet" href="style.css">
+
+  <title>Pokedex</title>
+</head>
+
+<body>
+  <div class="pokedex">
+    <div class="poke-left">
+      <div class="left-head">
+        <div class="left-head-corner">
+          <div class="lens">
+            <div class="reflect"> </div>
+          </div>
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+        </div>
+        <div class="curves">
+          <div class="curveL-1">
+            <div class="curveL-2"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="left-main">
+        <div class="display">
+          <div class="display-top">
+            <div class="minired"></div>
+            <div class="minired"></div>
+          </div>
+          <div class="display-middle">
+            <div class="jiggly">
+              <img id="pokemon_image" class="jigglywiggly">
+              <p id="pokemon_name"></p>
+            </div>
+          </div>
+          <div class="display-bottom">
+            <div class="triangle"></div>
+            <div class="naast-triangle">
+              <div class="bigred"></div>
+              <div class="menu">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-bars"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="left-footer">
+        <div class="foot-left">
+          <div class="bigblue"></div>
+        </div>
+        <div class="foot-middle">
+          <div class="buttons">
+            <div class="knop gardengreen"></div>
+            <div class="knop orange"></div>
+          </div>
+          <div class="numberbox">
+            <p id="pokemon_id" class="number"><p>
+          </div>
+        </div>
+        <div class="foot-right">
+          <div class="d-pad">
+            <div class="button d up"><i class="fas fa-caret-up"></i></div>
+            <div class="button d right"><i class="fas fa-caret-right"></i></div>
+            <div class="d middle"></div>
+            <div class="button d down"><i class="fas fa-caret-down"></i></div>
+            <div class="button d left"><i class="fas fa-caret-left"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="poke-middle">
+      <div class="bol"></div>
+      <div class="hol"></div>
+      <div class="bol"></div>
+      <div class="hol"></div>
+      <div class="bol"></div>
+      <div class="hol"></div>
+    </div>
+    <div class="poke-right">
+      <div class="right-head">
+        <div class="curvesR">
+          <div class="curveR-1">
+            <div class="curveR-2"></div>
+          </div>
+        </div>
+        <div class="right-head-corner"></div>
+
+        <!--<div class="curver-1"></div>
+                <div>
+                    <div class="curver-2">
+
+                        </div>
+                </div>-->
+      </div>
+      <div class="right-main">
+        <div class="greenbox">
+          <p id="pokemon_weight"></p>
+          <p id="pokemon_abilities"></p>
+          <p id="pokemon_moves"></p>
+
+        </div>
+        <div class="blueboxes">
+          <div class="row">
+            <div id="pokemon_moveone"class="bluebox"></div>
+            <div id="pokemon_movetwo"class="bluebox"></div>
+          </div>
+          <div class="row">
+            <div id="pokemon_movethree"class="bluebox"></div>
+            <div id="pokemon_movefour"class="bluebox"></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="right-footer">
+        <div class="foot-r-top">
+          <div>
+            <div class="dot darkblue "></div>
+            <div class="dot darkyellow"></div>
+          </div>
+          <div class="buttons">
+            <div class="knop gardengreen"></div>
+            <div class="knop orange"></div>
+          </div>
+        </div>
+        <div class="foot-r-middle">
+          <div class="buttons">
+            <button id="previous" class="but-gray l"><i class="fas fa-caret-left"></i></button>
+            <button id="next"class="but-gray r"><i class="fas fa-caret-right"></i></button>
+          </div>
+          <div class="but-yellow"><i class="fas fa-caret-left"></i></div>
+        </div>
+        <div class="foot-r-bottom">
+          <input type="text" id="pokesearch" name="pokesearch" placeholder="Pikachu" div class="but-rect-yellow"><label for="pokesearch"><button id="search"></button></label></input>
+
+        </div>
+        <ul id="list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://kit.fontawesome.com/24d7844539.js"></script>
+  <script>
+        /*==================================================================================================
+        ======================================== Magic Happens Here! =======================================
+        ==================================================================================================*/
+        //Variables are declared.
+        let base_url = "https://pokeapi.co/api/v2/";
+        let poke_search = document.getElementById("pokesearch");
+        let search = document.getElementById("search");
+        let previous = document.getElementById("previous");
+        let next = document.getElementById("next");
+        let list = document.getElementById("list");
+        let pokemon_name;
+        let pokemon_id;
+        let pokemon_moves;
+        let pokemon_abilities;
+        let pokemon_image;
+        let pokemon_weight;
+        //EventListeners are added to HTML elements.
+        search.addEventListener("click", function() {
+            LoadPokemon(poke_search.value);
+        });
+        poke_search.addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                LoadPokemon(poke_search.value);
+            }
+        })
+        previous.addEventListener("click", function() {
+            if (pokemon_id === undefined) {
+                pokemon_id = 2;
+            }
+            LoadPokemon(--pokemon_id);
+        });
+        next.addEventListener("click", function() {
+            if (pokemon_id === undefined) {
+                pokemon_id = 0;
+            }
+            LoadPokemon(++pokemon_id);
+        })
+        //Function that looks up the data for a pokemon when it's given the pokemon's name or id number.
+        function LoadPokemon(pokemon){
+            let request = new XMLHttpRequest();
+            let dots = 1;
+            request.onreadystatechange = function() {
+              // no fucking idea
+                if (this.readyState === 4 && this.status == 200 && pokemon !== "") {
+                    SetVariables(JSON.parse(this.responseText));
+                }
+                else {
+                    SetVariables(dots++);
+                }
+            }
+            request.open("GET", base_url + "pokemon/" + pokemon.toString().toLowerCase(), true);
+            request.send();
+        }
+        //This function changes the variables with the most recent pokemon's information.
+        function SetVariables(data){
+            if(typeof data === "number") {
+                console.log("Searching for data" + ".".repeat(data))
+            }
+            else {
+                console.log("Data found!")
+                pokemon_name = data.name;
+                pokemon_id = data.id;
+                pokemon_moves = data.moves.map(x => x.move.name);
+                pokemon_abilities = data.abilities.map(x => x.ability.name);
+                pokemon_image = data.sprites.front_default;
+                pokemon_weight = data.weight;
+                DoThingsWithTheDom();
+            }
+        }
+        //This function loads all of the pokemons and stores them in a list in your HTML.
+        //Clicking one of the list items will then look up data for that specific pokemon!
+        function LoadPokemonList() {
+            let request = new XMLHttpRequest();
+            list.innerHTML = "";
+            request.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status == 200) {
+                    let pokemon_list = JSON.parse(this.responseText).results.map(x => x.name);
+                    for (pokemon of pokemon_list) {
+                        let li = document.createElement("li");
+                        li.innerHTML = pokemon;
+                        li.addEventListener("click", function() {
+                            LoadPokemon(this.innerHTML);
+                        })
+                        list.append(li);
+                    }
+                }
+            }
+            request.open("GET", base_url + "pokemon?offset=0&limit=807", true);
+            request.send();
+        }
+        //Function that you can call to see the current pokemon's information
+        function LogPokeData() {
+            console.log("Name: " + pokemon_name
+            + "\n" + "ID: " + pokemon_id
+            + "\n" + "Moves:", pokemon_moves
+            , "\n" + "Abilities:", pokemon_abilities
+            , "\n" + "Image URL: " + pokemon_image
+            + "\n" + "Weight: " + pokemon_weight);
+        }
+        /*==================================================================================================
+        ======================================== Magic Ends Here! ==========================================
+        ==================================================================================================*/
+        function DoThingsWithTheDom() {
+
+
+          document.getElementById("pokemon_id").innerHTML = pokemon_id + "";
+          document.getElementById("pokemon_image").src = pokemon_image;
+          document.getElementById("pokemon_name").innerHTML = pokemon_name + "";
+          document.getElementById("pokemon_weight").innerHTML = pokemon_weight + "kg";
+          document.getElementById("pokemon_abilities").innerHTML = pokemon_abilities + "";
+          document.getElementById("pokemon_moveone").innerHTML = pokemon_moves[Math.floor(Math.random() * pokemon_moves.length)];
+          document.getElementById("pokemon_movetwo").innerHTML = pokemon_moves[Math.floor(Math.random() * pokemon_moves.length)];
+          document.getElementById("pokemon_movethree").innerHTML = pokemon_moves[Math.floor(Math.random() * pokemon_moves.length)];
+          document.getElementById("pokemon_movefour").innerHTML = pokemon_moves[Math.floor(Math.random() * pokemon_moves.length)];
+
+
+
+
+            /*
+            Write your code here!
+            The following variables contain data for you to use. Be careful with the data types (some are numbers, some are strings and some are arrays)!
+                pokemon_name
+                pokemon_id
+                pokemon_moves
+                pokemon_abilities
+                pokemon_image
+                pokemon_weight
+            The goal of the exercise is for you to display this information in your HTML.
+            You can do this by placing empty tags in your HTML, and the assigning their content with JS.
+            But you can also generate the HTML with document.createElement().
+            */
+        }
+    </script>
+</body>
+
+
+
+
+
+
+</html>
